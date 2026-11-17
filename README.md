@@ -218,3 +218,44 @@ GARMIN_EMAIL=you@email.com GARMIN_PASSWORD=yourpass npm start
 ## License
 
 MIT
+
+
+---
+
+# Owned checkout guide
+
+## Purpose and status
+
+This owned reference fork retains Nicolasvegam’s Garmin Connect MCP README and python-garminconnect attribution. It is a TypeScript stdio MCP server for personal Garmin data. The source now includes write tools beyond the read-oriented categories/count in the retained upstream description; runtime availability and counts were not tested.
+
+## Repository map
+
+[`src/index.ts`](src/index.ts) registers tools and starts stdio transport; [`src/setup.ts`](src/setup.ts) provides interactive authentication. [`src/client/`](src/client/) implements authentication and API requests; [`src/tools/`](src/tools/) and [`src/dtos/`](src/dtos/) define tools and input schemas. [`package.json`](package.json), [`tsup.config.ts`](tsup.config.ts) and [`CLAUDE.md`](CLAUDE.md) describe packaging and contributor context.
+
+## Architecture and integrations
+
+The MCP SDK routes calls through GarminClient. Authentication uses Garmin SSO and OAuth exchanges, including an external OAuth consumer configuration fetch. Tokens and profile information are persisted under `~/.garmin-mcp/`. The entry point registers write tools unconditionally, including activity creation/rename/deletion and health-record writes; this is not a read-only server.
+
+## Setup and environments
+
+Upstream setup specifies Node.js 20+ and a Garmin account; startup requires `GARMIN_EMAIL` and `GARMIN_PASSWORD`. Interactive setup can request MFA, authenticate remotely and save token/profile files. Do not run setup or supply account credentials for documentation review. The package declares version 1.1.0 while server metadata in source says 1.0.0; installed/version compatibility remains unverified.
+
+## Safe commands
+
+For documentation review, use local, read-only Git inspection: `git status --short`, `git ls-files`, `git diff -- README.md`, and `git diff --check`. Inspect scripts as text before considering execution. Installation, build, test, authentication and publication commands shown in the upstream documentation are outside this README-only review. `npm run setup` authenticates against Garmin; `npm start` starts the built server. Build/dev use tsup, and prepublishOnly builds the package. The upstream npx examples download and execute a package; none were used here.
+
+## Testing and validation
+
+The tracked [client test file](src/client/garmin.client.test.ts) explicitly uses the live API and credentials loaded through dotenv. Vitest is a development dependency, but the package has no test script. Do not run this file as an offline smoke test. Only README structure, new relative links, whitespace and preservation were checked; no health data, authentication or API behavior was tested.
+
+## Deployment and rollback
+
+The manifest packages build output as command-line executables; no hosted deployment is established by this checkout. Future installation/upgrade needs a deliberate version and client configuration review. Reverting the README or server version does not reverse Garmin writes, recover deleted activities or remove cached credentials. No package publication occurred here.
+
+## Risks and guardrails
+
+Health, fitness, account credentials and cached tokens are sensitive. Keep them outside Git and review what an agent may retrieve or change before enabling tools. The delete-activity tool describes deletion as permanent; do not invoke tools speculatively. The manifest declares MIT and the upstream README attribution is retained, but this snapshot has no tracked standalone LICENSE file; this guide adds no new licensing terms.
+
+## Related documentation
+
+Read [CLAUDE.md](CLAUDE.md), [package metadata](package.json), [authentication source](src/client/garmin-auth.ts), [write tools](src/tools/write.tools.ts) and the retained upstream setup and attribution above.
